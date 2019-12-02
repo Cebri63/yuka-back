@@ -6,6 +6,9 @@
   "repository": "https://github.com/Cebri63/yuka-back.git",
   "author": "Cebri63",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
   "private": false,
   "dependencies": {
     "body-parser": "^1.19.0",
