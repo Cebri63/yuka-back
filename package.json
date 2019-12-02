@@ -1,0 +1,15 @@
+{
+  "name": "yarn-back",
+  "version": "1.0.0",
+  "description": "yuka-backend",
+  "main": "index.js",
+  "repository": "https://github.com/Cebri63/yuka-back.git",
+  "author": "Cebri63",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.13"
+  }
+}
