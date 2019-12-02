@@ -12,6 +12,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 const Product = mongoose.model("Product", {
+  product_id: {
+    type: String
+  },
   name: {
     type: String,
     default: ""
