@@ -45,7 +45,7 @@ app.post("/create", async (req, res) => {
   console.log("coucou !");
 
   try {
-    let product = Product.findOne({ product_id: req.body.product_id });
+    let product = await Product.findOne({ product_id: req.body.product_id });
     if (product) {
       res.json({ message: "This product already exists" });
     } else {
