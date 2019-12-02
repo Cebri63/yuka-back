@@ -30,7 +30,11 @@ const Product = mongoose.model("Product", {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hi");
+  try {
+    res.send("Hi");
+  } catch (error) {
+    res.send(error.message);
+  }
 });
 
 app.post("/create", async (req, res) => {
