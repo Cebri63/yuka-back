@@ -23,7 +23,7 @@ const Product = mongoose.model("Product", {
     type: String
   },
   nutriScore: {
-    type: Number
+    type: String
   },
   date: {
     type: String
