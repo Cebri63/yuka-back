@@ -33,17 +33,16 @@ const Product = mongoose.model("Product", {
   }
 });
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   try {
-    res.send("Hi");
+    let all = await Product.find();
+    res.json(all);
   } catch (error) {
     res.send(error.message);
   }
 });
 
 app.post("/create", async (req, res) => {
-  console.log("coucou !");
-
   try {
     let product = await Product.findOne({ product_id: req.body.product_id });
     if (product) {
