@@ -54,7 +54,7 @@ const Product = mongoose.model("Product", {
   }
 });
 
-app.post("/sign_up", function(req, res) {
+app.post("/sign_up", async (req, res) => {
   if (validator.isEmail(req.body.email) === false) {
     return res.status(400).json({ message: "Invalid email" });
   }
@@ -71,24 +71,22 @@ app.post("/sign_up", function(req, res) {
     hash: hash
   });
 
-  newUser.save(function(err, userSaved) {
-    if (err) {
-      res.status(400).json({ error: err.message });
-    } else {
-      res.json({
-        _id: newUser._id,
-        token: newUser.token,
-        username: newUser.username
-      });
-    }
+  await newUser.save();
+
+  res.json({
+    _id: newUser._id,
+    token: newUser.token,
+    username: newUser.username
   });
 });
 
-app.post("/log_in", function(req, res) {
+app.post("/log_in", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  User.findOne({ email: email }).exec(function(err, userFound) {
+  const userFound = await User.findOne({ email: email });
+
+  if (userFound) {
     const salt = userFound.salt;
     const hash = SHA256(password + salt).toString(encBase64);
     if (hash === userFound.hash) {
@@ -100,7 +98,9 @@ app.post("/log_in", function(req, res) {
     } else {
       res.json({ error: "Invalid email/password" });
     }
-  });
+  } else {
+    res.json({ error: "User does not exists" });
+  }
 });
 
 app.get("/", async (req, res) => {
