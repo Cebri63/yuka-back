@@ -64,10 +64,7 @@ app.post("/sign_up", function(req, res) {
   const hash = SHA256(password + salt).toString(encBase64);
 
   const newUser = new User({
-    account: {
-      username: req.body.username,
-      biography: req.body.biography
-    },
+    username: req.body.username,
     email: req.body.email,
     token: uid2(16),
     salt: salt,
@@ -81,7 +78,7 @@ app.post("/sign_up", function(req, res) {
       res.json({
         _id: newUser._id,
         token: newUser.token,
-        username: newUser.account.username
+        username: newUser.username
       });
     }
   });
@@ -98,10 +95,7 @@ app.post("/log_in", function(req, res) {
       res.json({
         _id: userFound._id,
         token: userFound.token,
-        account: {
-          username: userFound.account.username,
-          biography: userFound.account.biography
-        }
+        username: userFound.username
       });
     } else {
       res.json({ error: "Invalid email/password" });
