@@ -108,7 +108,6 @@ app.post("/log_in", async (req, res) => {
 });
 
 app.get("/:userId", async (req, res) => {
-  // ROUTE A MODIFIER POUR PRENDRE EN COMPTE LE USERID
   console.log(req.params.userId);
 
   try {
