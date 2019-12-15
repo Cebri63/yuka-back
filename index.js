@@ -123,7 +123,7 @@ app.post("/create", async (req, res) => {
 
   try {
     // All user's products
-    let userProducts = await Product.find({ user: req.body.userId });
+    let userProducts = await Product.find({ user: req.body.user });
     console.log("userProducts ======>   ", userProducts);
 
     // if the product already exists
