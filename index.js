@@ -136,7 +136,7 @@ app.post("/create", async (req, res) => {
         nutriScore: req.body.nutriScore,
         date: req.body.date,
         image: req.body.image,
-        user: req.body.userId
+        user: req.body.user
       });
       await newProduct.save();
       res.json(newProduct);
