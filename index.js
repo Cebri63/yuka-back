@@ -113,7 +113,11 @@ app.get("/:userId", async (req, res) => {
 
   try {
     let all = await Product.find({ user: req.params.userId });
-    res.json(all);
+    if (all) {
+      res.json(all);
+    } else {
+      res.json(null);
+    }
   } catch (error) {
     res.send(error.message);
   }
