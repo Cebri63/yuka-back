@@ -11,7 +11,7 @@ const validator = require("validator");
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI || "mongobd://localhost/yuka-local", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -51,6 +51,10 @@ const Product = mongoose.model("Product", {
   },
   image: {
     type: String
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   }
 });
 
@@ -114,10 +118,14 @@ app.get("/", async (req, res) => {
 
 app.post("/create", async (req, res) => {
   try {
-    let product = await Product.findOne({ product_id: req.body.product_id });
-    if (product) {
+    // All user's products
+    let userProducts = await Product.find({ user: req.body.userId });
+
+    // if the product already exists
+    if (userProducts.includes({ product_id: req.body.product_id })) {
       res.json({ message: "This product already exists" });
     } else {
+      // else create product
       const newProduct = new Product({
         product_id: req.body.product_id,
         name: req.body.name,
