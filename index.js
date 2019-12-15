@@ -120,11 +120,14 @@ app.post("/create", async (req, res) => {
   try {
     // All user's products
     let userProducts = await Product.find({ user: req.body.userId });
+    console.log("userProducts ======>   ", userProducts);
 
     // if the product already exists
     if (userProducts.includes({ product_id: req.body.product_id })) {
       res.json({ message: "This product already exists" });
     } else {
+      console.log("ELSE CREATE");
+
       // else create product
       const newProduct = new Product({
         product_id: req.body.product_id,
@@ -132,7 +135,8 @@ app.post("/create", async (req, res) => {
         brand: req.body.brand,
         nutriScore: req.body.nutriScore,
         date: req.body.date,
-        image: req.body.image
+        image: req.body.image,
+        user: req.body.userId
       });
       await newProduct.save();
       res.json(newProduct);
