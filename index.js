@@ -107,7 +107,10 @@ app.post("/log_in", async (req, res) => {
   }
 });
 
-app.get("/", async (req, res) => {
+app.get("/:userId", async (req, res) => {
+  // ROUTE A MODIFIER POUR PRENDRE EN COMPTE LE USERID
+  console.log(req.params.userId);
+
   try {
     let all = await Product.find();
     res.json(all);
@@ -117,14 +120,9 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/create", async (req, res) => {
-  console.log("wesh");
-
-  console.log("req.body", req.body);
-
   try {
     // All user's products
     let userProducts = await Product.find({ user: req.body.user });
-    console.log("userProducts ======>   ", userProducts);
 
     // if the product already exists
     if (userProducts.includes({ product_id: req.body.product_id })) {
