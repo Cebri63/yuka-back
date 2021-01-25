@@ -11,51 +11,52 @@ const validator = require("validator");
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGODB_URI || "mongobd://localhost/yuka-local", {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 const User = mongoose.model("User", {
   username: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   token: String,
   hash: String,
-  salt: String
+  salt: String,
 });
 
 const Product = mongoose.model("Product", {
   product_id: {
-    type: String
+    type: String,
   },
   name: {
     type: String,
-    default: ""
+    default: "",
   },
   brand: {
-    type: String
+    type: String,
   },
   nutriScore: {
-    type: String
+    type: String,
   },
   date: {
-    type: String
+    type: String,
   },
   image: {
-    type: String
+    type: String,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }
+    ref: "User",
+  },
 });
 
 app.post("/sign_up", async (req, res) => {
@@ -72,7 +73,7 @@ app.post("/sign_up", async (req, res) => {
     email: req.body.email,
     token: uid2(16),
     salt: salt,
-    hash: hash
+    hash: hash,
   });
 
   await newUser.save();
@@ -80,7 +81,7 @@ app.post("/sign_up", async (req, res) => {
   res.json({
     _id: newUser._id,
     token: newUser.token,
-    username: newUser.username
+    username: newUser.username,
   });
 });
 
@@ -97,7 +98,7 @@ app.post("/log_in", async (req, res) => {
       res.json({
         _id: userFound._id,
         token: userFound.token,
-        username: userFound.username
+        username: userFound.username,
       });
     } else {
       res.json({ error: "Invalid email/password" });
@@ -141,7 +142,7 @@ app.post("/create", async (req, res) => {
         nutriScore: req.body.nutriScore,
         date: req.body.date,
         image: req.body.image,
-        user: req.body.user
+        user: req.body.user,
       });
       await newProduct.save();
       res.json(newProduct);
