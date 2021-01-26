@@ -132,7 +132,8 @@ app.post("/create", async (req, res) => {
       if (
         userProducts.some((item) => item.product_id === req.body.product_id)
       ) {
-        res.json({ message: "This product already exists" });
+        console.log("Product allready exists");
+        res.status(409).json({ message: "This product already exists" });
       } else {
         // else create product
         const newProduct = new Product({
@@ -145,7 +146,7 @@ app.post("/create", async (req, res) => {
           user: req.body.user,
         });
         await newProduct.save();
-        res.json(newProduct);
+        res.status(200).json(newProduct);
       }
     } else {
       res.status(400).json({ message: "Bad Request" });
