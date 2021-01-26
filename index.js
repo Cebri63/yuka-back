@@ -124,23 +124,13 @@ app.get("/:userId", async (req, res) => {
 });
 
 app.post("/create", async (req, res) => {
-  console.log("WESH");
   try {
     // All user's products
     let userProducts = await Product.find({ user: req.body.user });
-
-    console.log("userProducts", userProducts);
-    console.log("req.body.product_id", req.body.product_id);
-    console.log(
-      "userProducts.some((item) => item.product_id === req.body.product_id)",
-      userProducts.some((item) => item.product_id === req.body.product_id)
-    );
     // if the product already exists
     if (userProducts.some((item) => item.product_id === req.body.product_id)) {
       res.json({ message: "This product already exists" });
     } else {
-      console.log("ELSE CREATE");
-
       // else create product
       const newProduct = new Product({
         product_id: req.body.product_id,
@@ -156,6 +146,15 @@ app.post("/create", async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+app.post("/delete", async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.body.product_id);
+    res.status(200).json({ message: "Product deleted" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
