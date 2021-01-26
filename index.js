@@ -151,7 +151,7 @@ app.post("/create", async (req, res) => {
 
 app.post("/delete", async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.body.product_id);
+    await Product.findOneAndDelete({ product_id: req.body.product_id });
     res.status(200).json({ message: "Product deleted" });
   } catch (error) {
     res.status(400).json({ message: error.message });
