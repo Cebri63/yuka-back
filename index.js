@@ -125,24 +125,30 @@ app.get("/:userId", async (req, res) => {
 
 app.post("/create", async (req, res) => {
   try {
-    // All user's products
-    let userProducts = await Product.find({ user: req.body.user });
-    // if the product already exists
-    if (userProducts.some((item) => item.product_id === req.body.product_id)) {
-      res.json({ message: "This product already exists" });
+    if (req.body.product_id) {
+      // All user's products
+      let userProducts = await Product.find({ user: req.body.user });
+      // if the product already exists
+      if (
+        userProducts.some((item) => item.product_id === req.body.product_id)
+      ) {
+        res.json({ message: "This product already exists" });
+      } else {
+        // else create product
+        const newProduct = new Product({
+          product_id: req.body.product_id,
+          name: req.body.name,
+          brand: req.body.brand,
+          nutriScore: req.body.nutriScore,
+          date: req.body.date,
+          image: req.body.image,
+          user: req.body.user,
+        });
+        await newProduct.save();
+        res.json(newProduct);
+      }
     } else {
-      // else create product
-      const newProduct = new Product({
-        product_id: req.body.product_id,
-        name: req.body.name,
-        brand: req.body.brand,
-        nutriScore: req.body.nutriScore,
-        date: req.body.date,
-        image: req.body.image,
-        user: req.body.user,
-      });
-      await newProduct.save();
-      res.json(newProduct);
+      res.status(400).json({ message: "Bad Request" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
