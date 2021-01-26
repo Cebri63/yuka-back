@@ -129,7 +129,7 @@ app.post("/create", async (req, res) => {
     let userProducts = await Product.find({ user: req.body.user });
 
     // if the product already exists
-    if (userProducts.includes({ product_id: req.body.product_id })) {
+    if (userProducts.some((item) => item.product_id === req.body.product_id)) {
       res.json({ message: "This product already exists" });
     } else {
       console.log("ELSE CREATE");
