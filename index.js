@@ -44,8 +44,8 @@ const Product = mongoose.model("Product", {
   brands: {
     type: String,
   },
-  nutrient_levels_tags: {
-    type: Array,
+  nutrient_levels: {
+    type: Object,
   },
   nutriscore_grade: {
     type: String,
@@ -144,7 +144,7 @@ app.post("/create", async (req, res) => {
           product_name: req.body.name,
           brands: req.body.brand,
           nutriscore_grade: req.body.nutriScore,
-          nutrient_levels_tags: req.body.nutrient_levels_tags,
+          nutrient_levels: req.body.nutrient_levels,
           date: req.body.date,
           image_url: req.body.image,
           user: req.body.user,
