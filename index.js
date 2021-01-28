@@ -37,20 +37,20 @@ const Product = mongoose.model("Product", {
   product_id: {
     type: String,
   },
-  name: {
+  product_name: {
     type: String,
     default: "",
   },
-  brand: {
+  brands: {
     type: String,
   },
-  nutriScore: {
+  nutriscore_grade: {
     type: String,
   },
   date: {
     type: String,
   },
-  image: {
+  image_url: {
     type: String,
   },
   user: {
@@ -138,11 +138,11 @@ app.post("/create", async (req, res) => {
         // else create product
         const newProduct = new Product({
           product_id: req.body.product_id,
-          name: req.body.name,
-          brand: req.body.brand,
-          nutriScore: req.body.nutriScore,
+          product_name: req.body.name,
+          brands: req.body.brand,
+          nutriscore_grade: req.body.nutriScore,
           date: req.body.date,
-          image: req.body.image,
+          image_url: req.body.image,
           user: req.body.user,
         });
         await newProduct.save();
