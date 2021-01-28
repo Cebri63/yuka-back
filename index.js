@@ -44,7 +44,7 @@ const Product = mongoose.model("Product", {
   brands: {
     type: String,
   },
-  nutiments: {
+  nutriments: {
     type: Object,
   },
   nutrient_levels: {
