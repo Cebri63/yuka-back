@@ -131,6 +131,7 @@ app.get("/:userId", async (req, res) => {
 
 app.post("/create", async (req, res) => {
   try {
+    console.log(req.body);
     if (req.body.product_id) {
       // All user's products
       let userProducts = await Product.find({ user: req.body.user });
