@@ -147,12 +147,7 @@ app.post("/create", async (req, res) => {
           product_id: req.body.product_id,
           product_name: req.body.name,
           brands: req.body.brand,
-          nutriments: {
-            saturated_fat: req.body.saturated_fat,
-            sugars: req.body.sugars,
-            fat: req.body.fat,
-            salt: req.body.salt,
-          },
+          nutriments: req.body.nutriments,
           nutriscore_grade: req.body.nutriScore,
           nutrient_levels: req.body.nutrient_levels,
           date: req.body.date,
