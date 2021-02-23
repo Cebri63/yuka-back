@@ -103,7 +103,6 @@ app.post("/sign_up", async (req, res) => {
     });
 
     newUser.avatar = result;
-
     await newUser.save();
 
     res.json({
@@ -140,7 +139,21 @@ app.post("/log_in", async (req, res) => {
   }
 });
 
-app.get("/:userId", async (req, res) => {
+app.get("/user/:userId", async () => {
+  try {
+    const user = await User.findById(req.params.userId);
+    res.json({
+      _id: user._id,
+      token: user.token,
+      username: user.username,
+      avatar: user.avatar,
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+app.get("/products/:userId", async (req, res) => {
   console.log(req.params.userId);
 
   try {
