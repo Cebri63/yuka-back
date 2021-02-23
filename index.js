@@ -139,7 +139,7 @@ app.post("/log_in", async (req, res) => {
   }
 });
 
-app.get("/user/:userId", async () => {
+app.get("/user/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     res.json({
