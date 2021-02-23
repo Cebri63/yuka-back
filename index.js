@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const formidable = require("express-formidable");
+const cloudinary = require("cloudinary").v2;
 
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
@@ -9,12 +10,18 @@ const uid2 = require("uid2");
 const validator = require("validator");
 
 const app = express();
-app.use(bodyParser.json());
+app.use(formidable());
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+});
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const User = mongoose.model("User", {
@@ -27,6 +34,9 @@ const User = mongoose.model("User", {
     type: String,
     unique: true,
     required: true,
+  },
+  avatar: {
+    type: Object,
   },
   token: String,
   hash: String,
@@ -69,34 +79,47 @@ const Product = mongoose.model("Product", {
 });
 
 app.post("/sign_up", async (req, res) => {
-  if (validator.isEmail(req.body.email) === false) {
+  if (validator.isEmail(req.fields.email) === false) {
     return res.status(400).json({ message: "Invalid email" });
   }
 
-  const password = req.body.password;
-  const salt = uid2(16);
-  const hash = SHA256(password + salt).toString(encBase64);
+  const exist = await User.findOne({ email: req.fields.email });
+  if (!exist) {
+    const password = req.fields.password;
+    const salt = uid2(16);
+    const hash = SHA256(password + salt).toString(encBase64);
 
-  const newUser = new User({
-    username: req.body.username,
-    email: req.body.email,
-    token: uid2(16),
-    salt: salt,
-    hash: hash,
-  });
+    const newUser = new User({
+      username: req.fields.username,
+      email: req.fields.email,
+      token: uid2(16),
+      salt: salt,
+      hash: hash,
+    });
 
-  await newUser.save();
+    // Upload profile picture
+    const result = await cloudinary.uploader.upload(req.files.picture.path, {
+      folder: `/yuka/user/${newUser._id}`,
+    });
 
-  res.json({
-    _id: newUser._id,
-    token: newUser.token,
-    username: newUser.username,
-  });
+    newUser.avatar = result;
+
+    await newUser.save();
+
+    res.json({
+      _id: newUser._id,
+      token: newUser.token,
+      username: newUser.username,
+      avatar: newUser.avatar,
+    });
+  } else {
+    res.status(409).json({ message: "This email already has an account" });
+  }
 });
 
 app.post("/log_in", async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const email = req.fields.email;
+  const password = req.fields.password;
 
   const userFound = await User.findOne({ email: email });
 
@@ -134,29 +157,29 @@ app.get("/:userId", async (req, res) => {
 
 app.post("/create", async (req, res) => {
   try {
-    console.log(req.body);
-    if (req.body.product_id) {
+    console.log(req.fields);
+    if (req.fields.product_id) {
       // All user's products
-      let userProducts = await Product.find({ user: req.body.user });
+      let userProducts = await Product.find({ user: req.fields.user });
       // if the product already exists
       if (
-        userProducts.some((item) => item.product_id === req.body.product_id)
+        userProducts.some((item) => item.product_id === req.fields.product_id)
       ) {
         console.log("Product allready exists");
         res.status(409).json({ message: "This product already exists" });
       } else {
         // else create product
         const newProduct = new Product({
-          product_id: req.body.product_id,
-          product_name: req.body.name,
-          brands: req.body.brand,
-          nutriments: req.body.nutriments,
-          nutriscore_grade: req.body.nutriScore,
-          nutriscore_score: req.body.nutriscore_score,
-          nutrient_levels: req.body.nutrient_levels,
-          date: req.body.date,
-          image_url: req.body.image,
-          user: req.body.user,
+          product_id: req.fields.product_id,
+          product_name: req.fields.name,
+          brands: req.fields.brand,
+          nutriments: req.fields.nutriments,
+          nutriscore_grade: req.fields.nutriScore,
+          nutriscore_score: req.fields.nutriscore_score,
+          nutrient_levels: req.fields.nutrient_levels,
+          date: req.fields.date,
+          image_url: req.fields.image,
+          user: req.fields.user,
         });
         await newProduct.save();
         res.status(200).json(newProduct);
@@ -171,7 +194,7 @@ app.post("/create", async (req, res) => {
 
 app.post("/delete", async (req, res) => {
   try {
-    await Product.findOneAndDelete({ product_id: req.body.product_id });
+    await Product.findOneAndDelete({ product_id: req.fields.product_id });
     res.status(200).json({ message: "Product deleted" });
   } catch (error) {
     res.status(400).json({ message: error.message });
