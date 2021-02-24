@@ -121,6 +121,7 @@ app.post("/sign_up", async (req, res) => {
       username: newUser.username,
       email: newUser.email,
       avatar: newUser.avatar,
+      counter: newUser.counter,
     });
   } else {
     res.status(409).json({ message: "This email already has an account" });
@@ -143,6 +144,7 @@ app.post("/log_in", async (req, res) => {
         username: userFound.username,
         email: userFound.email,
         avatar: userFound.avatar,
+        counter: userFound.counter,
       });
     } else {
       res.json({ error: "Invalid email/password" });
@@ -161,6 +163,7 @@ app.get("/user/:userId", async (req, res) => {
       username: user.username,
       email: user.email,
       avatar: user.avatar,
+      counter: user.counter,
     });
   } catch (error) {
     res.send(error.message);
