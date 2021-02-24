@@ -66,6 +66,12 @@ const Product = mongoose.model("Product", {
   nutriscore_score: {
     type: Number,
   },
+  nova_group: {
+    type: Number,
+  },
+  ecoscore_grade: {
+    type: String,
+  },
   date: {
     type: String,
   },
@@ -190,6 +196,8 @@ app.post("/create", async (req, res) => {
           nutriscore_grade: req.fields.nutriScore,
           nutriscore_score: req.fields.nutriscore_score,
           nutrient_levels: req.fields.nutrient_levels,
+          nova_group: req.fields.nova_group,
+          ecoscore_grade: req.fields.ecoscore_grade,
           date: req.fields.date,
           image_url: req.fields.image,
           user: req.fields.user,
