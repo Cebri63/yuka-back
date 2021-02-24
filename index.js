@@ -115,6 +115,7 @@ app.post("/sign_up", async (req, res) => {
       _id: newUser._id,
       token: newUser.token,
       username: newUser.username,
+      email: newUser.email,
       avatar: newUser.avatar,
     });
   } else {
@@ -136,6 +137,8 @@ app.post("/log_in", async (req, res) => {
         _id: userFound._id,
         token: userFound.token,
         username: userFound.username,
+        email: userFound.email,
+        avatar: userFound.avatar,
       });
     } else {
       res.json({ error: "Invalid email/password" });
@@ -152,6 +155,7 @@ app.get("/user/:userId", async (req, res) => {
       _id: user._id,
       token: user.token,
       username: user.username,
+      email: user.email,
       avatar: user.avatar,
     });
   } catch (error) {
