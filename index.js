@@ -101,6 +101,7 @@ app.post("/sign_up", async (req, res) => {
     const newUser = new User({
       username: req.fields.username,
       email: req.fields.email,
+      counter: 0,
       token: uid2(16),
       salt: salt,
       hash: hash,
