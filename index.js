@@ -38,6 +38,9 @@ const User = mongoose.model("User", {
   avatar: {
     type: Object,
   },
+  counter: {
+    type: Number,
+  },
   token: String,
   hash: String,
   salt: String,
@@ -206,6 +209,11 @@ app.post("/create", async (req, res) => {
           image_url: req.fields.image,
           user: req.fields.user,
         });
+
+        // increment user counter
+        const user = await User.findById(req.fields.user);
+        user.counter++;
+        await user.save();
         await newProduct.save();
         res.status(200).json(newProduct);
       }
