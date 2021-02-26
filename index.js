@@ -213,6 +213,7 @@ app.post("/create", async (req, res) => {
           nova_group: req.fields.nova_group,
           ecoscore_grade: req.fields.ecoscore_grade,
           date: req.fields.date,
+          isFav: false,
           image_url: req.fields.image,
           user: req.fields.user,
         });
