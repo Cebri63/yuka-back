@@ -239,7 +239,8 @@ app.post("/update", async (req, res) => {
     const producToUpdate = await Product.findById(id);
     producToUpdate.isFav = !producToUpdate.isFav;
     await producToUpdate.save();
-    res.status(200).json({ message: "Product Updated" });
+    const all = await Product.find({ user: req.fields.userId });
+    res.status(200).json(all);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
