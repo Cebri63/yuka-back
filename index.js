@@ -78,6 +78,9 @@ const Product = mongoose.model("Product", {
   date: {
     type: String,
   },
+  isFav: {
+    type: Boolean,
+  },
   image_url: {
     type: String,
   },
