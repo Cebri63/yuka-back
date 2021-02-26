@@ -233,6 +233,18 @@ app.post("/create", async (req, res) => {
   }
 });
 
+app.post("/update", async (req, res) => {
+  try {
+    const id = req.fields.id;
+    const producToUpdate = await Product.findById(id);
+    producToUpdate.isFav = !producToUpdate.isFav;
+    await producToUpdate.save();
+    res.status(200).json({ message: "Product Updated" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 app.post("/delete", async (req, res) => {
   try {
     await Product.findOneAndDelete({ product_id: req.fields.product_id });
